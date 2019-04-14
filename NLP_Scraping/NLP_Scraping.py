@@ -21,15 +21,15 @@ def remove_non_ascii_1(text):
 
     return ''.join([i if ord(i) < 128 else ' ' for i in text])
 
-with closing(Firefox()) as browser:
+with closing(webdriver.Firefox()) as browser:
     site = "https://www.flipkart.com/redmi-note-5-pro-black-64-gb/product-reviews/itmf2fc3xgmxnhpx?page=1&pid=MOBF28FTQPHUPX83"
     browser.get(site)
 
     file = open("Review.txt", "w")
 
-    for count in range(1, 11):
-        nav_btns = browser.find_elements_by_class_name('_33m_Yg')
-
+    for count in range(1, 13):
+        nav_btns = browser.find_elements_by_class_name('_2Xp0TH')
+        
         button = ""
 
         for btn in nav_btns:
@@ -50,9 +50,10 @@ with closing(Firefox()) as browser:
             rm.click()
 
         page_source = browser.page_source
+        #print(page_source)
 
         soup = BeautifulSoup(page_source, "lxml")
-        ans = soup.find_all("div", class_="_3DCdKt")
+        ans = soup.find_all("div", class_="_1PBCrt")
 
 
         for tag in ans:
@@ -63,8 +64,11 @@ with closing(Firefox()) as browser:
             
             content = tag.find("div", class_="qwjRop").div.prettify().replace(u"\u2018", "'").replace(u"\u2019", "'")
             content = remove_non_ascii_1(content)
+            #print("Hi",content)
             content.encode('ascii','ignore')
-            content = content[15:-35]
+            #print("HiH",content)
+            content = content[24:-35]
+            #print("HiHi",content)
             content=re.sub('<.+>',' ',content)
             data_loop.append(content)
             
@@ -79,6 +83,7 @@ with closing(Firefox()) as browser:
             file.write("Review Title : %s\n\n" % title )
             file.write("Upvotes : " + str(upvotes) + "\n\nDownvotes : " + str(downvotes) + "\n\n")
             file.write("Review Content :\n%s\n\n\n\n" % content )
+
 
 file.close()
 dataset = pd.DataFrame(data_alll)
