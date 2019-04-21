@@ -27,6 +27,7 @@ import urllib.request,urllib.parse,urllib.error
 import re
 from bs4 import BeautifulSoup
 import unicodedata
+from sklearn.externals import joblib as jb
 
 
 
@@ -90,12 +91,14 @@ MNB = MultinomialNB()
 print("Training classifier...")
 MNB.fit(train_X, y_train)
 
+jb.dump(MNB, 'pickled_model.pkl')
+print("The model has been pickled for further testing...")
 
 pred = MNB.predict(test_X)
 
 print("The accuracy of our classifier is as follows : ", accuracy_score(y_test,pred))
 
-dF_review = pd.read_csv(r"Review(Content - Redmi Note 5 Pro).csv")
+dF_review = pd.read_csv(r"C:\Users\nauri\source\repos\NLP_Scraping\NLP_Scraping\Review(Content - Redmi Note 5 Pro).csv")
 print("Predicting Comment data from scraping...")
 Ftext = []
 for i in range(dF_review.shape[0]):
@@ -103,7 +106,7 @@ for i in range(dF_review.shape[0]):
     pred_data = preprocessing(temp)
     Ftext.append(pred_data)
 
-camera_file = open(r"C:\Users\nauri\Desktop\ML proj\Camera words.txt", "r")
+camera_file = open(r"Camera words.txt", "r")
 filter = camera_file.read().split('\n')
 
 Ftext_camera = []
@@ -135,7 +138,7 @@ print ("Rating out of 5 is :- ", rating)
 for i in pred_camera:
     sum1 = sum1 + i
 rating1 = sum1/len(pred_camera)
-rating1 = rating1 * 5
+rating1 = rating1 * 5   
 print ("Rating out of 5 for camera is :- ", rating1)
 
 #total_neg = 0
