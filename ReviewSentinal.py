@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 from nltk.corpus import stopwords
 from nltk import WordNetLemmatizer
@@ -76,8 +77,7 @@ def train_model():
 
 
 def predict_result():
-    reviews = pd.read_csv(
-        r"./Review.csv")
+    reviews = pd.read_csv(r"./Review.csv")
 
     print("Predicting Comment data from scraping...")
     tokenized_text = []
@@ -103,25 +103,9 @@ def predict_result():
     pred_res = MNB.predict(tokenized_text)
     pred_camera = MNB.predict(filtered_text)
 
-    print("The Predictions for each comment are as follows :-")
-    print(pred_res)
-    print(len(pred_res))
-    print("The Predictions for all camera related comments are as follows :-")
-    print(len(pred_camera))
-
-    sum = 0
-    sum1 = 0
-    for i in pred_res:
-        sum = sum + i
-        rating = sum/len(pred_res)
-        rating = rating * 5
-        print("Rating out of 5 is :- ", rating)
-
-    for i in pred_camera:
-        sum1 = sum1 + i
-        rating1 = sum1/len(pred_camera)
-        rating1 = rating1 * 5
-        print("Rating out of 5 for camera is :- ", rating1)
+    print("Overall Prediction : ", np.sum(pred_res)/len(pred_res))
+    print("Prediction as considering Camera : ",
+          np.sum(pred_camera)/len(pred_camera))
 
 
 read_data()
